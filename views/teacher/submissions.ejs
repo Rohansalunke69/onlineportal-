@@ -1,0 +1,46 @@
+<% var title = 'Submissions - ' + assignment.title %>
+<%- include('../partials/header') %>
+
+<a href="/teacher/dashboard" class="back-link">&larr; Back to Dashboard</a>
+
+<div class="card">
+  <h2><%= assignment.title %></h2>
+  <p class="meta"><strong>Subject:</strong> <%= assignment.subject %></p>
+  <p class="meta"><strong>Due Date:</strong> <%= new Date(assignment.dueDate).toLocaleString() %></p>
+</div>
+
+<h3>Student Submissions (<%= submissions.length %>)</h3>
+
+<% if (submissions.length === 0) { %>
+  <p class="empty-state">No submissions yet.</p>
+<% } else { %>
+  <% submissions.forEach(sub => { %>
+    <div class="card submission-card">
+      <div class="submission-header">
+        <div>
+          <strong><%= sub.studentId.name %></strong> (<%= sub.studentId.email %>)<br>
+          <small>Submitted: <%= new Date(sub.submittedAt).toLocaleString() %></small>
+        </div>
+        <span class="badge badge-<%= sub.status === 'graded' ? 'graded' : (sub.status === 'late' ? 'late' : 'submitted') %>">
+          <%= sub.status %>
+        </span>
+      </div>
+
+      <p><a href="<%= sub.fileUrl %>" target="_blank">📎 <%= sub.originalName %></a></p>
+
+      <form action="/teacher/submission/<%= sub._id %>/grade" method="POST" class="grade-form">
+        <div class="form-group">
+          <label for="grade-<%= sub._id %>">Grade / Marks</label>
+          <input type="text" id="grade-<%= sub._id %>" name="grade" value="<%= sub.grade || '' %>" placeholder="e.g., A or 9/10" required>
+        </div>
+        <div class="form-group">
+          <label for="feedback-<%= sub._id %>">Feedback</label>
+          <textarea id="feedback-<%= sub._id %>" name="feedback" rows="2" placeholder="Write feedback for the student..."><%= sub.feedback || '' %></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-small"><%= sub.status === 'graded' ? 'Update Grade' : 'Submit Grade' %></button>
+      </form>
+    </div>
+  <% }) %>
+<% } %>
+
+<%- include('../partials/footer') %>

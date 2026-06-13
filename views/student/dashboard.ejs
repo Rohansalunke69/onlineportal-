@@ -1,0 +1,40 @@
+<% var title = 'Student Dashboard' %>
+<%- include('../partials/header') %>
+
+<h2>My Assignments</h2>
+<p class="subtitle">Welcome, <%= user.name %>! Here are all the assignments posted by your teachers.</p>
+
+<% if (assignments.length === 0) { %>
+  <p class="empty-state">No assignments have been posted yet.</p>
+<% } else { %>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Subject</th>
+        <th>Due Date</th>
+        <th>Status</th>
+        <th>Grade</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% assignments.forEach(a => { %>
+        <tr>
+          <td><%= a.title %></td>
+          <td><%= a.subject %></td>
+          <td><%= new Date(a.dueDate).toLocaleString() %></td>
+          <td>
+            <span class="badge badge-<%= a.status.toLowerCase().includes('graded') ? 'graded' : (a.status.toLowerCase().includes('missed') ? 'missed' : (a.status.toLowerCase().includes('late') ? 'late' : (a.status === 'Pending' ? 'pending' : 'submitted'))) %>">
+              <%= a.status %>
+            </span>
+          </td>
+          <td><%= a.submission && a.submission.grade ? a.submission.grade : '-' %></td>
+          <td><a href="/student/assignment/<%= a._id %>" class="btn btn-small">View</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+<%- include('../partials/footer') %>

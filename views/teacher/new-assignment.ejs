@@ -1,0 +1,38 @@
+<% var title = 'New Assignment' %>
+<%- include('../partials/header') %>
+
+<a href="/teacher/dashboard" class="back-link">&larr; Back to Dashboard</a>
+
+<div class="card form-card">
+  <h2>Create New Assignment</h2>
+
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <form action="/teacher/assignment/new" method="POST">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" required>
+    </div>
+
+    <div class="form-group">
+      <label for="subject">Subject</label>
+      <input type="text" id="subject" name="subject" required>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description / Instructions</label>
+      <textarea id="description" name="description" rows="5" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="dueDate">Due Date</label>
+      <input type="datetime-local" id="dueDate" name="dueDate" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Assignment</button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

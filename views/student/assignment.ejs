@@ -1,0 +1,51 @@
+<% var title = assignment.title + ' - Assignment Details' %>
+<%- include('../partials/header') %>
+
+<a href="/student/dashboard" class="back-link">&larr; Back to Dashboard</a>
+
+<div class="card">
+  <h2><%= assignment.title %></h2>
+  <p class="meta"><strong>Subject:</strong> <%= assignment.subject %></p>
+  <p class="meta"><strong>Due Date:</strong> <%= new Date(assignment.dueDate).toLocaleString() %></p>
+  <hr>
+  <p><%= assignment.description %></p>
+</div>
+
+<div class="card">
+  <h3>Your Submission</h3>
+
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <% if (submission) { %>
+    <p><strong>File submitted:</strong> <a href="<%= submission.fileUrl %>" target="_blank"><%= submission.originalName %></a></p>
+    <p><strong>Submitted on:</strong> <%= new Date(submission.submittedAt).toLocaleString() %></p>
+    <p><strong>Status:</strong>
+      <span class="badge badge-<%= submission.status === 'graded' ? 'graded' : (submission.status === 'late' ? 'late' : 'submitted') %>">
+        <%= submission.status %>
+      </span>
+    </p>
+
+    <% if (submission.status === 'graded') { %>
+      <p><strong>Grade:</strong> <%= submission.grade %></p>
+      <p><strong>Feedback:</strong> <%= submission.feedback || 'No feedback provided.' %></p>
+    <% } %>
+
+    <hr>
+    <p>You can re-submit below to replace your current submission (allowed only before grading is final, as per your teacher's policy).</p>
+  <% } else { %>
+    <p>You have not submitted this assignment yet.</p>
+  <% } %>
+
+  <form action="/student/assignment/<%= assignment._id %>/submit" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="file">Upload File</label>
+      <input type="file" id="file" name="file" required>
+      <small>Allowed: pdf, doc, docx, txt, zip, ppt, pptx, xls, xlsx, jpg, png (max 10MB)</small>
+    </div>
+    <button type="submit" class="btn btn-primary"><%= submission ? 'Re-submit Assignment' : 'Submit Assignment' %></button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

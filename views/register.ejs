@@ -1,0 +1,41 @@
+<% var title = 'Register - Assignment Portal' %>
+<%- include('partials/header') %>
+
+<div class="auth-box">
+  <h2>Create an Account</h2>
+
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <form action="/register" method="POST">
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required minlength="6">
+    </div>
+
+    <div class="form-group">
+      <label for="role">I am a</label>
+      <select id="role" name="role" required>
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+  </form>
+
+  <p class="auth-switch">Already have an account? <a href="/login">Login here</a></p>
+</div>
+
+<%- include('partials/footer') %>
