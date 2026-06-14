@@ -1,40 +1,137 @@
-<% var title = 'Student Dashboard' %>
+<% var title = 'Dashboard' %>
+<% var activePage = 'dashboard' %>
 <%- include('../partials/header') %>
 
-<h2>My Assignments</h2>
-<p class="subtitle">Welcome, <%= user.name %>! Here are all the assignments posted by your teachers.</p>
+<%
+  const submittedCount = assignments.filter(a => a.submission).length;
+  const gradedCount    = assignments.filter(a => a.status === 'Graded').length;
+  const pendingCount   = assignments.filter(a => a.status === 'Pending').length;
+  const missedCount    = assignments.filter(a => a.status === 'Missed').length;
+
+  // Collect unique subjects for filter
+  const subjects = [...new Set(assignments.map(a => a.subject))];
+%>
+
+<!-- Page header -->
+<div class="page-header">
+  <div>
+    <h1 class="page-header-title">My Assignments</h1>
+    <p class="page-header-sub">Welcome back, <strong><%= user.name %></strong> — here's your progress overview</p>
+  </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="kpi-grid stagger">
+  <div class="kpi-card">
+    <div class="kpi-icon kpi-icon-indigo">📋</div>
+    <div class="kpi-body">
+      <div class="kpi-value"><%= assignments.length %></div>
+      <div class="kpi-label">Total</div>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon kpi-icon-green">📤</div>
+    <div class="kpi-body">
+      <div class="kpi-value"><%= submittedCount %></div>
+      <div class="kpi-label">Submitted</div>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon kpi-icon-purple">✅</div>
+    <div class="kpi-body">
+      <div class="kpi-value"><%= gradedCount %></div>
+      <div class="kpi-label">Graded</div>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon kpi-icon-amber">⏳</div>
+    <div class="kpi-body">
+      <div class="kpi-value"><%= pendingCount %></div>
+      <div class="kpi-label">Pending</div>
+    </div>
+  </div>
+  <% if (missedCount > 0) { %>
+  <div class="kpi-card">
+    <div class="kpi-icon kpi-icon-red">❌</div>
+    <div class="kpi-body">
+      <div class="kpi-value"><%= missedCount %></div>
+      <div class="kpi-label">Missed</div>
+    </div>
+  </div>
+  <% } %>
+</div>
 
 <% if (assignments.length === 0) { %>
-  <p class="empty-state">No assignments have been posted yet.</p>
+  <div class="empty-state">
+    <div class="empty-state-icon">📭</div>
+    <h3>No assignments yet</h3>
+    <p>Your teachers haven't posted any assignments yet. Check back soon!</p>
+  </div>
 <% } else { %>
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Subject</th>
-        <th>Due Date</th>
-        <th>Status</th>
-        <th>Grade</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% assignments.forEach(a => { %>
-        <tr>
-          <td><%= a.title %></td>
-          <td><%= a.subject %></td>
-          <td><%= new Date(a.dueDate).toLocaleString() %></td>
-          <td>
-            <span class="badge badge-<%= a.status.toLowerCase().includes('graded') ? 'graded' : (a.status.toLowerCase().includes('missed') ? 'missed' : (a.status.toLowerCase().includes('late') ? 'late' : (a.status === 'Pending' ? 'pending' : 'submitted'))) %>">
-              <%= a.status %>
-            </span>
-          </td>
-          <td><%= a.submission && a.submission.grade ? a.submission.grade : '-' %></td>
-          <td><a href="/student/assignment/<%= a._id %>" class="btn btn-small">View</a></td>
-        </tr>
-      <% }) %>
-    </tbody>
-  </table>
+
+<!-- Search & Filter -->
+<div class="filter-bar">
+  <div class="filter-search">
+    <span class="filter-search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search by title or subject…">
+  </div>
+  <select id="statusFilter" class="filter-select">
+    <option value="">All statuses</option>
+    <option value="pending">Pending</option>
+    <option value="submitted">Submitted</option>
+    <option value="graded">Graded</option>
+    <option value="missed">Missed</option>
+    <option value="late">Late</option>
+  </select>
+  <% if (subjects.length > 1) { %>
+  <select id="subjectFilter" class="filter-select">
+    <option value="">All subjects</option>
+    <% subjects.forEach(s => { %><option value="<%= s.toLowerCase() %>"><%= s %></option><% }) %>
+  </select>
+  <% } %>
+</div>
+
+<!-- Assignment Cards -->
+<div class="assignment-grid stagger">
+  <% assignments.forEach(function(a) {
+    const now     = new Date();
+    const due     = new Date(a.dueDate);
+    const diffMs  = due - now;
+    const diffH   = diffMs / 3600000;
+    let urgency   = 'none';
+    if (a.submission || a.status === 'Missed') urgency = 'none';
+    else if (diffMs <= 0)   urgency = 'overdue';
+    else if (diffH <= 24)   urgency = 'critical';
+    else if (diffH <= 72)   urgency = 'soon';
+    else                    urgency = 'ok';
+
+    const statusClass = a.status.toLowerCase().includes('graded')   ? 'graded'
+                      : a.status.toLowerCase().includes('missed')   ? 'missed'
+                      : a.status.toLowerCase().includes('late')     ? 'late'
+                      : a.status === 'Pending'                      ? 'pending'
+                      : 'submitted';
+  %>
+  <div class="asgn-card"
+       data-title="<%= a.title.toLowerCase() %>"
+       data-subject="<%= a.subject.toLowerCase() %>"
+       data-status="<%= a.status.toLowerCase() %>">
+    <div class="asgn-card-urgency urgency-<%= urgency %>"></div>
+    <div class="asgn-card-body">
+      <div class="asgn-card-subject"><%= a.subject %></div>
+      <div class="asgn-card-title"><%= a.title %></div>
+      <div class="asgn-card-meta">📅 Due: <%= new Date(a.dueDate).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) %></div>
+      <% if (a.submission && a.submission.grade) { %>
+        <div class="asgn-card-meta" style="color:var(--primary-600);font-weight:600;">🎓 Grade: <%= a.submission.grade %></div>
+      <% } %>
+    </div>
+    <div class="asgn-card-footer">
+      <span class="badge badge-<%= statusClass %>"><%= a.status %></span>
+      <a href="/student/assignment/<%= a._id %>" class="btn btn-secondary btn-sm">View →</a>
+    </div>
+  </div>
+  <% }) %>
+</div>
+
 <% } %>
 
 <%- include('../partials/footer') %>

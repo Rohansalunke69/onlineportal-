@@ -1,0 +1,93 @@
+<% var title = 'My Profile' %>
+<% var activePage = 'profile' %>
+<%- include('partials/header') %>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-header-title">My Profile</h1>
+    <p class="page-header-sub">Manage your account information and security</p>
+  </div>
+</div>
+
+<% if (typeof flash !== 'undefined' && flash && flash.type === 'success') { %>
+  <div class="alert alert-success"><span>✅</span> <%= flash.message %></div>
+<% } %>
+<% if (error) { %>
+  <div class="alert alert-error"><span>⚠️</span> <%= error %></div>
+<% } %>
+
+<!-- Profile Hero -->
+<div class="profile-hero">
+  <div class="profile-avatar-lg"><%= user.name.charAt(0).toUpperCase() %></div>
+  <div class="profile-info">
+    <h2><%= user.name %></h2>
+    <p><%= user.email %></p>
+    <div class="profile-badge"><%= user.role === 'teacher' ? '👨‍🏫 Teacher' : '🎓 Student' %></div>
+    <p style="margin-top:10px;font-size:0.78rem;color:rgba(255,255,255,0.65);">
+      Member since <%= new Date(dbUser.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}) %>
+    </p>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:840px;">
+
+  <!-- Change Name -->
+  <div class="card">
+    <h3 style="margin-bottom:18px;">✏️ Update Name</h3>
+    <form action="/profile/name" method="POST">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" value="<%= user.name %>" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm">Save Name</button>
+    </form>
+  </div>
+
+  <!-- Change Password -->
+  <div class="card">
+    <h3 style="margin-bottom:18px;">🔒 Change Password</h3>
+    <form action="/profile/password" method="POST">
+      <div class="form-group">
+        <label for="currentPassword">Current Password</label>
+        <input type="password" id="currentPassword" name="currentPassword" placeholder="••••••••" required>
+      </div>
+      <div class="form-group">
+        <label for="newPassword">New Password</label>
+        <input type="password" id="newPassword" name="newPassword" placeholder="Min. 6 characters" required minlength="6">
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm New Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repeat new password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm">Change Password</button>
+    </form>
+  </div>
+
+</div>
+
+<!-- Account Info (read-only) -->
+<div class="card" style="max-width:840px;margin-top:4px;">
+  <h3 style="margin-bottom:16px;">📋 Account Details</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">
+    <div>
+      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:4px;">Email</div>
+      <div style="font-size:0.9rem;color:var(--text-primary);font-weight:500;"><%= user.email %></div>
+    </div>
+    <div>
+      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:4px;">Role</div>
+      <div style="font-size:0.9rem;color:var(--text-primary);font-weight:500;text-transform:capitalize;"><%= user.role %></div>
+    </div>
+    <div>
+      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:4px;">Joined</div>
+      <div style="font-size:0.9rem;color:var(--text-primary);font-weight:500;"><%= new Date(dbUser.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}) %></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @media (max-width: 640px) {
+    div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+<%- include('partials/footer') %>

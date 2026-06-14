@@ -1,41 +1,44 @@
-<% var title = 'Register - Assignment Portal' %>
+<% var title = 'Register — AssignPortal' %>
 <%- include('partials/header') %>
 
-<div class="auth-box">
-  <h2>Create an Account</h2>
+<div class="auth-brand">
+  <div class="auth-brand-icon">📚</div>
+  <div class="auth-brand-name">AssignPortal</div>
+</div>
+
+<div class="auth-card">
+  <h2>Create an account</h2>
+  <p class="auth-tagline">Join AssignPortal to get started</p>
 
   <% if (error) { %>
-    <div class="alert alert-error"><%= error %></div>
+    <div class="alert alert-error"><span>⚠️</span> <%= error %></div>
   <% } %>
 
   <form action="/register" method="POST">
     <div class="form-group">
-      <label for="name">Full Name</label>
-      <input type="text" id="name" name="name" required>
+      <label for="name">Full name</label>
+      <input type="text" id="name" name="name" placeholder="Jane Smith" required autocomplete="name">
     </div>
-
     <div class="form-group">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
     </div>
-
     <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" required minlength="6">
+      <label for="password">Password <small style="font-weight:400;color:var(--text-muted)">(min. 6 characters)</small></label>
+      <input type="password" id="password" name="password" placeholder="••••••••" required minlength="6" autocomplete="new-password">
     </div>
-
     <div class="form-group">
       <label for="role">I am a</label>
       <select id="role" name="role" required>
-        <option value="student">Student</option>
-        <option value="teacher">Teacher</option>
+        <option value="" disabled selected>Select your role…</option>
+        <option value="student">🎓 Student</option>
+        <option value="teacher">👨‍🏫 Teacher</option>
       </select>
     </div>
-
-    <button type="submit" class="btn btn-primary">Register</button>
+    <button type="submit" class="btn btn-primary btn-block btn-lg">Create Account →</button>
   </form>
 
-  <p class="auth-switch">Already have an account? <a href="/login">Login here</a></p>
+  <p class="auth-switch">Already have an account? <a href="/login">Sign in</a></p>
 </div>
 
 <%- include('partials/footer') %>

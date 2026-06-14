@@ -25,15 +25,10 @@ router.post('/register', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User({
-      name,
-      email: email.toLowerCase(),
-      password: hashedPassword,
-      role
-    });
-
+    const user = new User({ name, email: email.toLowerCase(), password: hashedPassword, role });
     await user.save();
 
+    req.flash('success', '🎉 Account created! Welcome aboard — please log in.');
     res.redirect('/login');
   } catch (err) {
     console.error(err);
@@ -53,23 +48,13 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
-      return res.render('login', { error: 'Invalid email or password.' });
-    }
+    if (!user) return res.render('login', { error: 'Invalid email or password.' });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.render('login', { error: 'Invalid email or password.' });
-    }
+    if (!isMatch) return res.render('login', { error: 'Invalid email or password.' });
 
-    // Save minimal user info in session
-    req.session.user = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role
-    };
-
+    req.session.user = { id: user._id, name: user.name, email: user.email, role: user.role };
+    req.flash('success', `👋 Welcome back, ${user.name}!`);
     res.redirect('/dashboard');
   } catch (err) {
     console.error(err);

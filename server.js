@@ -4,9 +4,10 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const path = require('path');
 
-const authRoutes = require('./routes/auth');
+const authRoutes    = require('./routes/auth');
 const studentRoutes = require('./routes/student');
 const teacherRoutes = require('./routes/teacher');
+const profileRoutes = require('./routes/profile');
 const { requireLogin } = require('./middleware/auth');
 
 const app = express();
@@ -25,8 +26,23 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback_secret_change_me',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 4 } // 4 hours
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 4, // 4 hours
+    httpOnly: true,
+    sameSite: 'lax'
+  }
 }));
+
+// ── Flash message middleware ──────────────────────────────────
+app.use((req, res, next) => {
+  res.locals.flash = req.session.flash || null;
+  if (req.session.flash) delete req.session.flash;
+
+  req.flash = function (type, message) {
+    req.session.flash = { type, message };
+  };
+  next();
+});
 
 // Make logged-in user available in all views
 app.use((req, res, next) => {
@@ -38,10 +54,14 @@ app.use((req, res, next) => {
 app.use('/', authRoutes);
 app.use('/student', studentRoutes);
 app.use('/teacher', teacherRoutes);
+app.use('/', profileRoutes);
 
-// Home -> redirect to dashboard or login
+// Home -> render landing page
 app.get('/', (req, res) => {
-  res.redirect(req.session.user ? '/dashboard' : '/login');
+  if (req.session.user) {
+    return res.redirect('/dashboard');
+  }
+  res.render('landing');
 });
 
 // Generic dashboard redirect based on role
@@ -54,7 +74,7 @@ app.get('/dashboard', requireLogin, (req, res) => {
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).send('Page not found');
+  res.status(404).render('404', { user: req.session.user || null });
 });
 
 // ---------- Connect to MongoDB and start server ----------

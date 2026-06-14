@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AssignPortal — The modern assignment submission platform for students and teachers. Submit, track, and grade assignments seamlessly.">
+  <title>AssignPortal — Smart Assignment Submission Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/landing.css">
+</head>
+<body class="landing-body">
+
+<!-- ═══ Floating Particles Canvas ═══ -->
+<canvas id="particleCanvas"></canvas>
+
+<!-- ═══ Navigation ═══ -->
+<nav class="land-nav" id="landNav">
+  <div class="land-nav-inner">
+    <a href="/" class="land-nav-brand">
+      <div class="land-nav-brand-icon">📚</div>
+      <span>AssignPortal</span>
+    </a>
+    <div class="land-nav-links">
+      <a href="#features" class="land-nav-link">Features</a>
+      <a href="#how-it-works" class="land-nav-link">How it Works</a>
+      <a href="#testimonials" class="land-nav-link">Testimonials</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span>
+      </button>
+      <a href="/login" class="land-btn-ghost">Sign In</a>
+      <a href="/register" class="land-btn-primary">Get Started →</a>
+    </div>
+    <button class="land-hamburger" id="landHamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav -->
+<div class="land-mobile-nav" id="mobileNav">
+  <a href="#features">Features</a>
+  <a href="#how-it-works">How it Works</a>
+  <a href="#testimonials">Testimonials</a>
+  <hr>
+  <a href="/login">Sign In</a>
+  <a href="/register" class="land-btn-primary" style="text-align:center;margin-top:8px;">Get Started →</a>
+</div>
+
+<!-- ═══ HERO SECTION ═══ -->
+<section class="hero">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+  <div class="hero-glow hero-glow-3"></div>
+  
+  <div class="hero-content" id="heroContent">
+    <div class="hero-badge animate-on-scroll">
+      <span class="hero-badge-dot"></span>
+      Trusted by 500+ students &amp; teachers
+    </div>
+    <h1 class="hero-title animate-on-scroll">
+      Assignments made<br>
+      <span class="hero-title-gradient">effortless.</span>
+    </h1>
+    <p class="hero-subtitle animate-on-scroll">
+      The all-in-one academic hub where teachers create, students submit, 
+      and everyone stays on track — no chaos, just clarity.
+    </p>
+    <div class="hero-actions animate-on-scroll">
+      <a href="/register" class="hero-cta-primary">
+        <span>Start Free →</span>
+        <div class="hero-cta-shine"></div>
+      </a>
+      <a href="#how-it-works" class="hero-cta-secondary">
+        <span class="hero-play-icon">▶</span>
+        See how it works
+      </a>
+    </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══ LOGOS / TRUST BAR ═══ -->
+<section class="trust-bar">
+  <div class="trust-inner">
+    <span class="trust-label">Built for academic excellence</span>
+    <div class="trust-logos">
+      <div class="trust-logo">🏫 Universities</div>
+      <div class="trust-logo">🎓 Colleges</div>
+      <div class="trust-logo">📖 Schools</div>
+      <div class="trust-logo">💻 Bootcamps</div>
+      <div class="trust-logo">🧪 Labs</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section class="land-section" id="features">
+  <div class="land-container">
+    <div class="section-intro animate-on-scroll">
+      <div class="section-label">Features</div>
+      <h2 class="section-heading">Everything you need,<br><span class="text-gradient">nothing you don't.</span></h2>
+      <p class="section-desc">A clean, powerful toolkit that puts focus back on learning.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card animate-on-scroll" style="--delay:0.05s;">
+        <div class="feature-icon" style="--glow:#818cf8;">📤</div>
+        <h3>Drag & Drop Upload</h3>
+        <p>Students can submit files effortlessly by dragging them into the browser. Supports PDF, DOCX, ZIP and more.</p>
+      </div>
+      <div class="feature-card animate-on-scroll" style="--delay:0.1s;">
+        <div class="feature-icon" style="--glow:#34d399;">🎓</div>
+        <h3>Instant Grading</h3>
+        <p>Teachers grade with one click, add feedback, and students see results immediately on their dashboard.</p>
+      </div>
+      <div class="feature-card animate-on-scroll" style="--delay:0.15s;">
+        <div class="feature-icon" style="--glow:#f59e0b;">⏰</div>
+        <h3>Live Countdown</h3>
+        <p>Real-time countdown timers on every assignment so students always know exactly how much time is left.</p>
+      </div>
+      <div class="feature-card animate-on-scroll" style="--delay:0.2s;">
+        <div class="feature-icon" style="--glow:#ef4444;">📊</div>
+        <h3>Visual Progress</h3>
+        <p>Teachers see live progress bars for submissions and grading. KPI stat cards give instant overview.</p>
+      </div>
+      <div class="feature-card animate-on-scroll" style="--delay:0.25s;">
+        <div class="feature-icon" style="--glow:#a855f7;">🌙</div>
+        <h3>Dark Mode</h3>
+        <p>Beautifully crafted dark theme that's easy on the eyes during late-night study sessions.</p>
+      </div>
+      <div class="feature-card animate-on-scroll" style="--delay:0.3s;">
+        <div class="feature-icon" style="--glow:#06b6d4;">🔒</div>
+        <h3>Secure & Private</h3>
+        <p>Encrypted passwords, session-based auth, and role-based access. Your data stays protected.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="land-section land-section-alt" id="how-it-works">
+  <div class="land-container">
+    <div class="section-intro animate-on-scroll">
+      <div class="section-label">How it works</div>
+      <h2 class="section-heading">Three steps to<br><span class="text-gradient">academic clarity.</span></h2>
+      <p class="section-desc">From assignment creation to grading — the entire workflow in one platform.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card animate-on-scroll" style="--delay:0.05s;">
+        <div class="step-number">01</div>
+        <div class="step-icon-wrap">
+          <div class="step-icon">📝</div>
+          <div class="step-connector"></div>
+        </div>
+        <h3>Teacher Creates</h3>
+        <p>Teachers create assignments with title, subject, detailed instructions, and a deadline. It takes seconds.</p>
+      </div>
+      <div class="step-card animate-on-scroll" style="--delay:0.15s;">
+        <div class="step-number">02</div>
+        <div class="step-icon-wrap">
+          <div class="step-icon">📂</div>
+          <div class="step-connector"></div>
+        </div>
+        <h3>Student Submits</h3>
+        <p>Students drag-and-drop their files. Late submissions are automatically flagged. Re-submissions allowed.</p>
+      </div>
+      <div class="step-card animate-on-scroll" style="--delay:0.25s;">
+        <div class="step-number">03</div>
+        <div class="step-icon-wrap">
+          <div class="step-icon">🏆</div>
+        </div>
+        <h3>Grade & Feedback</h3>
+        <p>Teachers grade inline, add written feedback, and students see results in real-time on their dashboard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="land-section" id="testimonials">
+  <div class="land-container">
+    <div class="section-intro animate-on-scroll">
+      <div class="section-label">Testimonials</div>
+      <h2 class="section-heading">Loved by students<br><span class="text-gradient">and teachers alike.</span></h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card animate-on-scroll" style="--delay:0.05s;">
+        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <p>"Finally a portal that doesn't feel like it was built in 2005. The dark mode and countdown timers are game changers!"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:linear-gradient(135deg,#818cf8,#c084fc);">A</div>
+          <div>
+            <strong>Arjun Mehta</strong>
+            <span>B.Tech Student</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card animate-on-scroll" style="--delay:0.15s;">
+        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <p>"I can see exactly who submitted, who's late, and grade everything in one place. The progress bars make life so easy."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:linear-gradient(135deg,#34d399,#06b6d4);">P</div>
+          <div>
+            <strong>Prof. Kavitha R.</strong>
+            <span>Computer Science Dept.</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card animate-on-scroll" style="--delay:0.25s;">
+        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <p>"The drag-and-drop upload is super smooth. I submitted 3 assignments in under a minute. No more email chaos!"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">S</div>
+          <div>
+            <strong>Sneha Patil</strong>
+            <span>MCA Student</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA SECTION ═══ -->
+<section class="land-cta">
+  <div class="land-cta-glow"></div>
+  <div class="land-container" style="position:relative;z-index:2;">
+    <div class="animate-on-scroll">
+      <h2 class="land-cta-title">Ready to simplify<br>your classroom?</h2>
+      <p class="land-cta-sub">Join hundreds of students and teachers already using AssignPortal.</p>
+      <div class="land-cta-buttons">
+        <a href="/register" class="hero-cta-primary" style="font-size:1.05rem;">
+          <span>Create Free Account →</span>
+          <div class="hero-cta-shine"></div>
+        </a>
+        <a href="/login" class="hero-cta-secondary" style="color:#fff;">Already a user? Sign in</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="land-footer">
+  <div class="land-container">
+    <div class="land-footer-grid">
+      <div class="land-footer-brand">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div class="land-nav-brand-icon">📚</div>
+          <span style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.05rem;color:var(--text-primary);">AssignPortal</span>
+        </div>
+        <p>The modern assignment submission platform for academic institutions.</p>
+      </div>
+      <div class="land-footer-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it Works</a>
+        <a href="#testimonials">Testimonials</a>
+      </div>
+      <div class="land-footer-col">
+        <h4>Account</h4>
+        <a href="/login">Sign In</a>
+        <a href="/register">Register</a>
+      </div>
+      <div class="land-footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+    <div class="land-footer-bottom">
+      <p>&copy; <%= new Date().getFullYear() %> AssignPortal. Built with ❤️</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ SCRIPTS ═══ -->
+<script>
+/* ── Dark mode ── */
+(function () {
+  const root = document.documentElement;
+  const saved = localStorage.getItem('ap-theme') || 'light';
+  root.setAttribute('data-theme', saved);
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.textContent = saved === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeToggle')?.addEventListener('click', function () {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('ap-theme', next);
+    if (icon) icon.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+})();
+
+/* ── Mobile nav ── */
+const hamburger = document.getElementById('landHamburger');
+const mobileNav = document.getElementById('mobileNav');
+hamburger?.addEventListener('click', function () {
+  this.classList.toggle('active');
+  mobileNav?.classList.toggle('open');
+});
+document.querySelectorAll('.land-mobile-nav a').forEach(a => a.addEventListener('click', () => {
+  hamburger?.classList.remove('active');
+  mobileNav?.classList.remove('open');
+}));
+
+/* ── Navbar scroll effect ── */
+const landNav = document.getElementById('landNav');
+window.addEventListener('scroll', () => {
+  landNav?.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+/* ── Intersection Observer — reveal animations ── */
+const observerOptions = { threshold: 0.12, rootMargin: '0px 0px -30px 0px' };
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+      observer.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+/* ── Counter animation ── */
+function animateCounters() {
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target = parseInt(el.getAttribute('data-count'));
+    const duration = 2000;
+    const start = performance.now();
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      el.textContent = Math.floor(eased * target).toLocaleString();
+      if (progress < 1) requestAnimationFrame(update);
+      else el.textContent = target.toLocaleString() + (el.closest('.hero-stat-value') && target === 99 ? '%' : '+');
+    }
+    requestAnimationFrame(update);
+  });
+}
+const heroObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) { animateCounters(); heroObs.disconnect(); }
+  });
+}, { threshold: 0.3 });
+const heroStats = document.querySelector('.hero-stats');
+if (heroStats) heroObs.observe(heroStats);
+
+/* ── Particle Canvas ── */
+(function () {
+  const canvas = document.getElementById('particleCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [], mouse = { x: -999, y: -999 };
+  const PARTICLE_COUNT = 50;
+  const COLORS = ['rgba(99,102,241,', 'rgba(168,85,247,', 'rgba(217,70,239,', 'rgba(59,130,246,'];
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function Particle() {
+    this.x = Math.random() * w;
+    this.y = Math.random() * h;
+    this.vx = (Math.random() - 0.5) * 0.4;
+    this.vy = (Math.random() - 0.5) * 0.4;
+    this.r = Math.random() * 2 + 1;
+    this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    this.alpha = Math.random() * 0.5 + 0.15;
+  }
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+  canvas.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  canvas.addEventListener('mouseleave', () => { mouse.x = -999; mouse.y = -999; });
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach((p, i) => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+
+      // Mouse repulsion
+      const dx = p.x - mouse.x, dy = p.y - mouse.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) { p.x += dx * 0.02; p.y += dy * 0.02; }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + p.alpha + ')';
+      ctx.fill();
+
+      // Connect nearby particles
+      for (let j = i + 1; j < particles.length; j++) {
+        const p2 = particles[j];
+        const d = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
+        if (d < 140) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = p.color + (0.08 * (1 - d / 140)) + ')';
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── Smooth scroll for anchor links ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+/* ── Parallax on hero ── */
+window.addEventListener('scroll', () => {
+  const scroll = window.scrollY;
+  const mockup = document.getElementById('heroMockup');
+  const hero = document.getElementById('heroContent');
+  if (hero && scroll < 800)  hero.style.transform = 'translateY(' + (scroll * 0.15) + 'px)';
+  if (mockup && scroll < 800) mockup.style.transform = 'translateY(' + (scroll * -0.08) + 'px)';
+});
+</script>
+</body>
+</html>

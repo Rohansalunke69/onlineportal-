@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Page Not Found | AssignPortal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="page-404">
+  <div class="page-404-code">404</div>
+  <h2>Page not found</h2>
+  <p>The page you're looking for doesn't exist or has been moved. Let's get you back on track.</p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+    <% if (user) { %>
+      <a href="/dashboard" class="btn btn-primary btn-lg">🏠 Go to Dashboard</a>
+    <% } else { %>
+      <a href="/login" class="btn btn-primary btn-lg">🔑 Sign In</a>
+    <% } %>
+    <a href="javascript:history.back()" class="btn btn-secondary btn-lg">← Go Back</a>
+  </div>
+</div>
+<script>
+  (function () {
+    const saved = localStorage.getItem('ap-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+  })();
+</script>
+</body>
+</html>

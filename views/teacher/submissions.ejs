@@ -1,46 +1,122 @@
-<% var title = 'Submissions - ' + assignment.title %>
+<% var title = 'Submissions — ' + assignment.title %>
+<% var activePage = 'dashboard' %>
 <%- include('../partials/header') %>
 
-<a href="/teacher/dashboard" class="back-link">&larr; Back to Dashboard</a>
+<a href="/teacher/dashboard" class="back-link">← Back to Dashboard</a>
 
-<div class="card">
-  <h2><%= assignment.title %></h2>
-  <p class="meta"><strong>Subject:</strong> <%= assignment.subject %></p>
-  <p class="meta"><strong>Due Date:</strong> <%= new Date(assignment.dueDate).toLocaleString() %></p>
+<!-- Assignment info -->
+<div class="card" style="margin-bottom:24px;">
+  <p style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--primary-500);margin-bottom:4px;"><%= assignment.subject %></p>
+  <h2 style="margin-bottom:8px;"><%= assignment.title %></h2>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;">
+    <span style="font-size:0.85rem;color:var(--text-secondary);">📅 Due: <%= new Date(assignment.dueDate).toLocaleString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) %></span>
+  </div>
 </div>
 
-<h3>Student Submissions (<%= submissions.length %>)</h3>
+<!-- Stats row -->
+<%
+  const gradedCount = submissions.filter(s => s.status === 'graded').length;
+  const lateCount   = submissions.filter(s => s.status === 'late').length;
+%>
+<div class="kpi-grid stagger" style="margin-bottom:24px;">
+  <div class="kpi-card">
+    <div class="kpi-icon kpi-icon-indigo">📋</div>
+    <div class="kpi-body">
+      <div class="kpi-value"><%= submissions.length %></div>
+      <div class="kpi-label">Total</div>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon kpi-icon-green">✅</div>
+    <div class="kpi-body">
+      <div class="kpi-value"><%= gradedCount %></div>
+      <div class="kpi-label">Graded</div>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon kpi-icon-amber">⏳</div>
+    <div class="kpi-body">
+      <div class="kpi-value"><%= submissions.length - gradedCount %></div>
+      <div class="kpi-label">Pending Grade</div>
+    </div>
+  </div>
+  <% if (lateCount > 0) { %>
+  <div class="kpi-card">
+    <div class="kpi-icon kpi-icon-red">🕐</div>
+    <div class="kpi-body">
+      <div class="kpi-value"><%= lateCount %></div>
+      <div class="kpi-label">Late</div>
+    </div>
+  </div>
+  <% } %>
+</div>
+
+<div class="section-title">Student Submissions</div>
 
 <% if (submissions.length === 0) { %>
-  <p class="empty-state">No submissions yet.</p>
+  <div class="empty-state">
+    <div class="empty-state-icon">📭</div>
+    <h3>No submissions yet</h3>
+    <p>Students haven't submitted anything for this assignment yet.</p>
+  </div>
 <% } else { %>
-  <% submissions.forEach(sub => { %>
-    <div class="card submission-card">
+  <div class="stagger">
+  <% submissions.forEach(function(sub) {
+    const initials = sub.studentId.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+    const statusClass = sub.status === 'graded' ? 'graded' : (sub.status === 'late' ? 'late' : 'submitted');
+  %>
+    <div class="submission-card">
       <div class="submission-header">
-        <div>
-          <strong><%= sub.studentId.name %></strong> (<%= sub.studentId.email %>)<br>
-          <small>Submitted: <%= new Date(sub.submittedAt).toLocaleString() %></small>
+        <div class="submission-student">
+          <div class="student-avatar"><%= initials %></div>
+          <div>
+            <div class="student-name"><%= sub.studentId.name %></div>
+            <div class="student-email"><%= sub.studentId.email %></div>
+          </div>
         </div>
-        <span class="badge badge-<%= sub.status === 'graded' ? 'graded' : (sub.status === 'late' ? 'late' : 'submitted') %>">
-          <%= sub.status %>
-        </span>
+        <div class="submission-time">
+          <span class="badge badge-<%= statusClass %>"><%= sub.status %></span><br>
+          <span style="margin-top:4px;display:block;">
+            <%= new Date(sub.submittedAt).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) %>
+          </span>
+        </div>
       </div>
 
-      <p><a href="<%= sub.fileUrl %>" target="_blank">📎 <%= sub.originalName %></a></p>
+      <a href="<%= sub.fileUrl %>" target="_blank" class="submission-file">📎 <%= sub.originalName %></a>
+
+      <% if (sub.status === 'graded') { %>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;background:var(--bg-input);border-radius:var(--radius-sm);border:1px solid var(--border);">
+        <span style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;color:var(--text-muted);">Current Grade:</span>
+        <span style="font-size:1.1rem;font-weight:800;color:var(--primary-600);font-family:'Sora',sans-serif;"><%= sub.grade %></span>
+        <% if (sub.feedback) { %>
+        <span style="font-size:0.82rem;color:var(--text-secondary);">· "<%= sub.feedback %>"</span>
+        <% } %>
+      </div>
+      <% } %>
 
       <form action="/teacher/submission/<%= sub._id %>/grade" method="POST" class="grade-form">
-        <div class="form-group">
-          <label for="grade-<%= sub._id %>">Grade / Marks</label>
-          <input type="text" id="grade-<%= sub._id %>" name="grade" value="<%= sub.grade || '' %>" placeholder="e.g., A or 9/10" required>
+        <div class="grade-form-row">
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="grade-<%= sub._id %>">Grade / Marks</label>
+            <input type="text" id="grade-<%= sub._id %>" name="grade"
+              value="<%= sub.grade || '' %>" placeholder="e.g., A+ or 9/10" required>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="feedback-<%= sub._id %>">Feedback (optional)</label>
+            <input type="text" id="feedback-<%= sub._id %>" name="feedback"
+              value="<%= sub.feedback || '' %>" placeholder="Write a short note for the student…">
+          </div>
+          <div style="padding-bottom:2px;">
+            <label style="visibility:hidden;font-size:0.82rem;">Submit</label>
+            <button type="submit" class="btn btn-primary btn-sm" style="width:100%;">
+              <%= sub.status === 'graded' ? '🔄 Update' : '🎓 Grade' %>
+            </button>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="feedback-<%= sub._id %>">Feedback</label>
-          <textarea id="feedback-<%= sub._id %>" name="feedback" rows="2" placeholder="Write feedback for the student..."><%= sub.feedback || '' %></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary btn-small"><%= sub.status === 'graded' ? 'Update Grade' : 'Submit Grade' %></button>
       </form>
     </div>
   <% }) %>
+  </div>
 <% } %>
 
 <%- include('../partials/footer') %>

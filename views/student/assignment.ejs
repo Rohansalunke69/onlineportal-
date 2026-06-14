@@ -1,50 +1,97 @@
-<% var title = assignment.title + ' - Assignment Details' %>
+<% var title = assignment.title + ' — Assignment' %>
+<% var activePage = 'dashboard' %>
 <%- include('../partials/header') %>
 
-<a href="/student/dashboard" class="back-link">&larr; Back to Dashboard</a>
+<a href="/student/dashboard" class="back-link">← Back to Dashboard</a>
 
+<%
+  const now       = new Date();
+  const due       = new Date(assignment.dueDate);
+  const diffMs    = due - now;
+  const diffH     = diffMs / 3600000;
+  let urgency     = 'ok';
+  if      (diffMs <= 0)  urgency = 'overdue';
+  else if (diffH <= 24)  urgency = 'critical';
+  else if (diffH <= 72)  urgency = 'soon';
+%>
+
+<!-- Assignment Detail Card -->
 <div class="card">
-  <h2><%= assignment.title %></h2>
-  <p class="meta"><strong>Subject:</strong> <%= assignment.subject %></p>
-  <p class="meta"><strong>Due Date:</strong> <%= new Date(assignment.dueDate).toLocaleString() %></p>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
+    <div>
+      <p style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--primary-500);margin-bottom:4px;"><%= assignment.subject %></p>
+      <h2 style="margin-bottom:0;"><%= assignment.title %></h2>
+    </div>
+  </div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;">
+    <div class="card meta">📅 <strong>Due:</strong> <%= new Date(assignment.dueDate).toLocaleString('en-IN',{weekday:'short',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}) %></div>
+  </div>
   <hr>
-  <p><%= assignment.description %></p>
+  <p style="color:var(--text-secondary);line-height:1.7;white-space:pre-wrap;"><%= assignment.description %></p>
 </div>
 
+<!-- Countdown Timer -->
+<div class="countdown-bar urgency-<%= urgency %>" data-due-date="<%= assignment.dueDate %>">
+  <span class="countdown-icon"><%= urgency === 'overdue' ? '🔴' : urgency === 'critical' ? '🟠' : urgency === 'soon' ? '🟡' : '🟢' %></span>
+  <div class="countdown-text">
+    <div class="countdown-label"><%= urgency === 'overdue' ? 'Deadline has passed' : 'Time remaining' %></div>
+    <div class="countdown-value">Calculating…</div>
+  </div>
+</div>
+
+<!-- Submission Section -->
 <div class="card">
   <h3>Your Submission</h3>
 
   <% if (error) { %>
-    <div class="alert alert-error"><%= error %></div>
+    <div class="alert alert-error"><span>⚠️</span> <%= error %></div>
   <% } %>
 
   <% if (submission) { %>
-    <p><strong>File submitted:</strong> <a href="<%= submission.fileUrl %>" target="_blank"><%= submission.originalName %></a></p>
-    <p><strong>Submitted on:</strong> <%= new Date(submission.submittedAt).toLocaleString() %></p>
-    <p><strong>Status:</strong>
-      <span class="badge badge-<%= submission.status === 'graded' ? 'graded' : (submission.status === 'late' ? 'late' : 'submitted') %>">
-        <%= submission.status %>
-      </span>
-    </p>
-
+    <!-- Existing submission info -->
     <% if (submission.status === 'graded') { %>
-      <p><strong>Grade:</strong> <%= submission.grade %></p>
-      <p><strong>Feedback:</strong> <%= submission.feedback || 'No feedback provided.' %></p>
+    <div class="grade-result">
+      <div class="grade-result-score"><%= submission.grade %></div>
+      <div class="grade-result-label">Your Grade</div>
+      <% if (submission.feedback) { %>
+      <div class="grade-result-feedback">
+        <strong style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.3px;color:var(--text-muted);">Teacher Feedback</strong><br>
+        <span style="margin-top:4px;display:block;"><%= submission.feedback %></span>
+      </div>
+      <% } else { %>
+      <div class="grade-result-feedback" style="color:var(--text-muted);font-style:italic;">No written feedback provided.</div>
+      <% } %>
+    </div>
     <% } %>
 
-    <hr>
-    <p>You can re-submit below to replace your current submission (allowed only before grading is final, as per your teacher's policy).</p>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+      <a href="<%= submission.fileUrl %>" target="_blank" class="submission-file">📎 <%= submission.originalName %></a>
+      <span class="badge badge-<%= submission.status === 'graded' ? 'graded' : (submission.status === 'late' ? 'late' : 'submitted') %>"><%= submission.status %></span>
+    </div>
+    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;">Submitted on <%= new Date(submission.submittedAt).toLocaleString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) %></p>
+
+    <% if (submission.status !== 'graded') { %>
+    <div class="alert alert-info"><span>ℹ️</span> You can re-submit below to replace your current file (until your teacher grades it).</div>
+    <% } %>
   <% } else { %>
-    <p>You have not submitted this assignment yet.</p>
+    <p style="color:var(--text-secondary);margin-bottom:16px;">You haven't submitted this assignment yet.</p>
   <% } %>
 
+  <!-- Upload form -->
   <form action="/student/assignment/<%= assignment._id %>/submit" method="POST" enctype="multipart/form-data">
     <div class="form-group">
-      <label for="file">Upload File</label>
-      <input type="file" id="file" name="file" required>
-      <small>Allowed: pdf, doc, docx, txt, zip, ppt, pptx, xls, xlsx, jpg, png (max 10MB)</small>
+      <label>Upload File</label>
+      <div class="file-drop-zone">
+        <input type="file" name="file" required>
+        <div class="file-drop-icon">📂</div>
+        <div class="file-drop-text"><span>Browse files</span> or drag &amp; drop here</div>
+        <div class="file-drop-hint">PDF, DOC, DOCX, TXT, ZIP, PPT, XLS, JPG, PNG · Max 10 MB</div>
+        <div class="file-name-display"></div>
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary"><%= submission ? 'Re-submit Assignment' : 'Submit Assignment' %></button>
+    <button type="submit" class="btn btn-primary">
+      <%= submission ? '🔄 Re-submit Assignment' : '📤 Submit Assignment' %>
+    </button>
   </form>
 </div>
 

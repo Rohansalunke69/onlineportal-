@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,28 +7,105 @@
   <title><%= typeof title !== 'undefined' ? title : 'Assignment Portal' %></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <nav class="navbar">
-    <div class="nav-brand">
-      <a href="/">📚 AssignPortal</a>
+
+<% if (user) { %>
+<!-- ══ APP LAYOUT WITH SIDEBAR ══ -->
+<div class="app-layout">
+
+  <!-- Sidebar overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">📚</div>
+      <div class="sidebar-brand-text">
+        AssignPortal
+        <span>Academic Hub</span>
+      </div>
     </div>
-    <div class="nav-links">
-      <% if (user) { %>
-        <% if (user.role === 'student') { %>
-          <a href="/student/dashboard">Dashboard</a>
-        <% } else { %>
-          <a href="/teacher/dashboard">Dashboard</a>
-          <a href="/teacher/assignment/new">+ New Assignment</a>
-        <% } %>
-        <span class="nav-user"><%= user.name %> · <%= user.role %></span>
-        <a href="/logout" class="btn-link">Logout</a>
+
+    <!-- User info -->
+    <div class="sidebar-user">
+      <div class="sidebar-avatar"><%= user.name.charAt(0).toUpperCase() %></div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name"><%= user.name %></div>
+        <div class="sidebar-user-role"><%= user.role === 'teacher' ? '👨‍🏫 Teacher' : '🎓 Student' %></div>
+      </div>
+    </div>
+
+    <!-- Nav links -->
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Navigation</div>
+
+      <% if (user.role === 'student') { %>
+        <a href="/student/dashboard" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'dashboard' ? 'active' : '' %>">
+          <span class="sidebar-link-icon">🏠</span> Dashboard
+        </a>
       <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
+        <a href="/teacher/dashboard" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'dashboard' ? 'active' : '' %>">
+          <span class="sidebar-link-icon">🏠</span> Dashboard
+        </a>
+        <a href="/teacher/assignment/new" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'new-assignment' ? 'active' : '' %>">
+          <span class="sidebar-link-icon">➕</span> New Assignment
+        </a>
       <% } %>
+
+      <div class="sidebar-section-label" style="margin-top: 8px;">Account</div>
+      <a href="/profile" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'profile' ? 'active' : '' %>">
+        <span class="sidebar-link-icon">👤</span> Profile
+      </a>
+    </nav>
+
+    <!-- Logout -->
+    <div class="sidebar-logout">
+      <a href="/logout" id="logoutLink">
+        <span class="sidebar-link-icon">🚪</span> Logout
+      </a>
     </div>
-  </nav>
-  <main class="container">
+  </aside>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Top bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">☰</button>
+        <span class="topbar-title"><%= typeof title !== 'undefined' ? title : 'Assignment Portal' %></span>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <span id="themeIcon">🌙</span>
+          <span id="themeLabel">Dark</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Page content -->
+    <main class="page-content">
+
+<% } else { %>
+<!-- ══ AUTH LAYOUT (no sidebar) ══ -->
+<div class="auth-page">
+  <!-- Dark mode toggle for auth pages -->
+  <div style="position:fixed;top:16px;right:16px;">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <span id="themeIcon">🌙</span>
+      <span id="themeLabel">Dark</span>
+    </button>
+  </div>
+<% } %>
+
+<!-- Toast container (always rendered) -->
+<div class="toast-container" id="toastContainer"></div>
+
+<% if (typeof flash !== 'undefined' && flash) { %>
+<script>
+  window.__FLASH__ = { type: '<%= flash.type %>', message: '<%= flash.message.replace(/'/g, "\\'") %>' };
+</script>
+<% } %>

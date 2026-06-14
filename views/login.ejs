@@ -1,28 +1,32 @@
-<% var title = 'Login - Assignment Portal' %>
+<% var title = 'Login — AssignPortal' %>
 <%- include('partials/header') %>
 
-<div class="auth-box">
-  <h2>Login</h2>
+<div class="auth-brand">
+  <div class="auth-brand-icon">📚</div>
+  <div class="auth-brand-name">AssignPortal</div>
+</div>
+
+<div class="auth-card">
+  <h2>Welcome back</h2>
+  <p class="auth-tagline">Sign in to your account to continue</p>
 
   <% if (error) { %>
-    <div class="alert alert-error"><%= error %></div>
+    <div class="alert alert-error"><span>⚠️</span> <%= error %></div>
   <% } %>
 
   <form action="/login" method="POST">
     <div class="form-group">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
     </div>
-
     <div class="form-group">
       <label for="password">Password</label>
-      <input type="password" id="password" name="password" required>
+      <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
     </div>
-
-    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="submit" class="btn btn-primary btn-block btn-lg">Sign In →</button>
   </form>
 
-  <p class="auth-switch">Don't have an account? <a href="/register">Register here</a></p>
+  <p class="auth-switch">Don't have an account? <a href="/register">Create one</a></p>
 </div>
 
 <%- include('partials/footer') %>
